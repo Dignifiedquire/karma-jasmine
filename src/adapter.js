@@ -1,4 +1,3 @@
-/* jshint globalstrict: true */
 'use strict'
 
 /**
@@ -7,7 +6,7 @@
  * @return {Boolean}       True if external, False otherwise.
  */
 function isExternalStackEntry (entry) {
-  return (entry ? true : false) &&
+  return !!entry &&
   // entries related to jasmine and karma-jasmine:
   !/\/(jasmine-core|karma-jasmine)\//.test(entry) &&
   // karma specifics, e.g. "at http://localhost:7018/karma.js:185"
@@ -20,8 +19,8 @@ function isExternalStackEntry (entry) {
  * @return {Array}        A list of relevant stack entries.
  */
 function getRelevantStackFrom (stack) {
-  var filteredStack = [],
-    relevantStack = []
+  var filteredStack = []
+  var relevantStack = []
 
   stack = stack.split('\n')
 
@@ -61,7 +60,9 @@ function getRelevantStackFrom (stack) {
 function formatFailedStep (step) {
   // Safari seems to have no stack trace,
   // so we just return the error message:
-  if (!step.stack) { return step.message; }
+  if (!step.stack) {
+    return step.message
+  }
 
   var relevantMessage = []
   var relevantStack = []
@@ -289,6 +290,7 @@ var KarmaSpecFilter = function (options) {
  * @param {Object} config The karma config
  * @param {Object} jasmineEnv jasmine environment object
  */
+// eslint-disable-next-line no-unused-vars
 var createSpecFilter = function (config, jasmineEnv) {
   var specFilter = new KarmaSpecFilter({
     filterString: function () {
@@ -311,6 +313,7 @@ var createSpecFilter = function (config, jasmineEnv) {
  * @param  {Object}   [jasmineEnv] Optional Jasmine environment for testing.
  * @return {Function}              Karma starter function.
  */
+// eslint-disable-next-line no-unused-vars
 function createStartFn (karma, jasmineEnv) {
   // This function will be assigned to `window.__karma__.start`:
   return function () {
@@ -323,33 +326,43 @@ function createStartFn (karma, jasmineEnv) {
 
 // Polyfills for correct work adapter in IE8
 if (!('indexOf' in Array.prototype)) {
-  Array.prototype.indexOf = function (find, i /*opt*/) {
-    if (i === undefined) {i = 0;}
-    if (i < 0) {i += this.length;}
-    if (i < 0) {i = 0;}
+  // eslint-disable-next-line no-extend-native
+  Array.prototype.indexOf = function (find, i /* opt */) {
+    if (i === undefined) i = 0
+    if (i < 0) i += this.length
+    if (i < 0) i = 0
     for (var n = this.length; i < n; i++) {
       if (i in this && this[i] === find) {
-        return i;}}
+        return i
+      }
+    }
     return -1
   }
 }
 
 if (!('map' in Array.prototype)) {
-  Array.prototype.map = function (mapper, that /*opt*/) {
+  // eslint-disable-next-line no-extend-native
+  Array.prototype.map = function (mapper, that /* opt */) {
     var other = new Array(this.length)
     for (var i = 0, n = this.length; i < n; i++) {
       if (i in this) {
-        other[i] = mapper.call(that, this[i], i, this);}}
+        other[i] = mapper.call(that, this[i], i, this)
+      }
+    }
     return other
   }
 }
 
 if (!('filter' in Array.prototype)) {
-  Array.prototype.filter = function (filter, that /*opt*/) {
-    var other = [], v
+  // eslint-disable-next-line no-extend-native
+  Array.prototype.filter = function (filter, that /* opt */) {
+    var other = []
+    var v
     for (var i = 0, n = this.length; i < n; i++) {
       if (i in this && filter.call(that, v = this[i], i, this)) {
-        other.push(v);}}
+        other.push(v)
+      }
+    }
     return other
   }
 }

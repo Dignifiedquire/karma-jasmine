@@ -66,7 +66,7 @@ module.exports = function (grunt) {
   grunt.loadTasks('tasks')
 
   grunt.registerTask('test', ['karma'])
-  grunt.registerTask('default', ['eslint', 'test'])
+  grunt.registerTask('default', ['build', 'eslint', 'test'])
 
   grunt.registerTask('release', 'Bump the version and publish to NPM.', function (type) {
     grunt.task.run([
