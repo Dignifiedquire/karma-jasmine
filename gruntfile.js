@@ -63,12 +63,14 @@ module.exports = function (grunt) {
   })
 
   require('load-grunt-tasks')(grunt)
+  grunt.loadTasks('tasks')
 
   grunt.registerTask('test', ['karma'])
   grunt.registerTask('default', ['eslint', 'test'])
 
   grunt.registerTask('release', 'Bump the version and publish to NPM.', function (type) {
     grunt.task.run([
+      'build',
       'npm-contributors',
       'bump:' + (type || 'patch') + ':bump-only',
       'conventionalChangelog',
